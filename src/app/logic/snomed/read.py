@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.snomed import SnomedConcept, SnomedDescription, SnomedRelationship
-from app.schemas.concept import SnomedConceptReturn
+from app.schemas.snomed import SnomedConceptOut
 from .constants import FULLY_SPECIFIED_NAME, IS_A, SYNONYM
 
 
@@ -39,8 +39,8 @@ def get_concept(db: Session, id: int):
             fsn = term.term
         elif term.typeId == SYNONYM:
             synonyms.append(term.term)
-    
-    return SnomedConceptReturn(
+
+    return SnomedConceptOut(
         id=id,
         active=active,
         fsn=fsn,

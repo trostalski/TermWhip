@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.schemas.snomed import SnomedConceptOut
 from app.api import deps
-from app.logic import read
+from app.logic.snomed import read
 
 router = APIRouter()
 

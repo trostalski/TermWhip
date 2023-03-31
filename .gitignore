@@ -1,2 +1,7 @@
-# big data files
-downloads
+# python
+**/__pycache__/
+*.py[cod]
+
+# environment
+.env
+venv/
