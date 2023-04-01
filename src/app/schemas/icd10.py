@@ -11,6 +11,7 @@ class ICD10CodeOut(BaseModel):
     group_description: str
     parent: str
     children: List[str] = []
+    version: str = "ICD-10"
 
     class Config:
         orm_mode = True
