@@ -2,7 +2,7 @@
 
 **This project is under development**
 
-TermWhip is an extensible medical terminology servive.
+TermWhip is an extensible medical terminology service.
 
 ### Terminologies
 
