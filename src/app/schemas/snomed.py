@@ -11,3 +11,7 @@ class SnomedConceptOut(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ECLQuery(BaseModel):
+    ecl_expression: str
