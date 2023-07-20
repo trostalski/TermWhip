@@ -1,14 +1,16 @@
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
+from sqlalchemy import func, text
 
-from app.schemas.snomed import SnomedConceptOut, ECLQuery
+from app.schemas.snomed import SnomedConceptOut, FtsOut, CodedTerm
+from app.models.snomed import SnomedConcept, SnomedDescription
 from app.api import deps
-from app.logic.snomed import read, ecl
+from app.logic.snomed import read
 
 router = APIRouter()
 
 
-@router.get("/{id}", response_model=SnomedConceptOut)
+@router.get("/code/{id}", response_model=SnomedConceptOut)
 def read_concept(id: int, db: Session = Depends(deps.get_db)):
     db_concept = read.get_concept(db, id=id)
     if db_concept is None:
@@ -16,9 +18,19 @@ def read_concept(id: int, db: Session = Depends(deps.get_db)):
     return db_concept
 
 
-@router.post("/ecl", response_model=list[SnomedConceptOut])
-def read_concept(ecl_expression: ECLQuery, db: Session = Depends(deps.get_db)):
-    psql_query = ecl.transform_ecl_to_sql(ecl_expression=ecl_expression.ecl_expression)
-    print(psql_query)
-    db.query(psql_query)
-    return None
+@router.get("/fts", response_model=FtsOut)
+def read_fts(search_term: str, db: Session = Depends(deps.get_db)):
+    query = text(
+        """
+        select d.term, c.id from snomed_descriptions d, snomed_concepts c
+        where c.id = d.concept_id AND to_tsquery(:term) @@ term_ts_vector
+        limit 10;
+        """
+    )
+    terms = db.execute(
+        query,
+        {"term": search_term},
+    )
+
+    coded_terms = [CodedTerm(term=t[0], code=t[1]) for t in terms]
+    return FtsOut(coded_terms=coded_terms)

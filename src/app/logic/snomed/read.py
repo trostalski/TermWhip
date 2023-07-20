@@ -47,3 +47,7 @@ def get_concept(db: Session, id: int):
         synonyms=synonyms,
         is_a=is_a,
     )
+
+
+def text_search():
+    pass

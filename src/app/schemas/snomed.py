@@ -15,3 +15,12 @@ class SnomedConceptOut(BaseModel):
 
 class ECLQuery(BaseModel):
     ecl_expression: str
+
+
+class CodedTerm(BaseModel):
+    term: str
+    code: int
+
+
+class FtsOut(BaseModel):
+    coded_terms: List[CodedTerm]

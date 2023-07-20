@@ -1,6 +1,14 @@
-from sqlalchemy import BigInteger, Column, ForeignKey, String
+from sqlalchemy import BigInteger, Column, ForeignKey, String, Computed, Index
+from sqlalchemy.dialects.postgresql import TSVECTOR
+from sqlalchemy.types import TypeDecorator
+
 
 from app.db.base import Base
+
+
+class TSVector(TypeDecorator):
+    impl = TSVECTOR
+    cache_ok = True
 
 
 class SnomedDescription(Base):
@@ -19,3 +27,16 @@ class SnomedDescription(Base):
     )
     term = Column("term", String, nullable=False)
     caseSignificanceId = Column("case_significance_id", String, nullable=False)
+    term_ts_vector = Column(
+        "term_ts_vector",
+        TSVector(),
+        nullable=False,
+    )
+
+    __table__args__ = (
+        Index(
+            "idx_term_tsvector",
+            term_ts_vector,
+            postgresql_using="gin",
+        ),
+    )
