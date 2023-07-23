@@ -27,7 +27,7 @@ class SnomedDescription(Base):
     )
     term = Column("term", String, nullable=False)
     caseSignificanceId = Column("case_significance_id", String, nullable=False)
-    term_ts_vector = Column(
+    fts_ts_vector = Column(
         "term_ts_vector",
         TSVector(),
         nullable=False,
@@ -36,7 +36,7 @@ class SnomedDescription(Base):
     __table__args__ = (
         Index(
             "idx_term_tsvector",
-            term_ts_vector,
+            fts_ts_vector,
             postgresql_using="gin",
         ),
     )
