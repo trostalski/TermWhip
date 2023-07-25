@@ -5,3 +5,6 @@
 # environment
 .env
 venv/
+
+# graph gpickle files
+*.gpickle
