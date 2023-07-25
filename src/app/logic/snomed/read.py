@@ -34,7 +34,6 @@ def get_concept(db: Session, id: int):
     fsn = None
     synonyms = []
     for term in terms:
-        print(term.typeId)
         if term.typeId == FULLY_SPECIFIED_NAME:
             fsn = term.term
         elif term.typeId == SYNONYM:

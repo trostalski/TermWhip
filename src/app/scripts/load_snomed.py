@@ -1,3 +1,4 @@
+import multiprocessing
 import sys
 import csv
 import logging
@@ -16,7 +17,6 @@ from app.models.snomed import (
     SnomedStatedRelationship,
     SnomedTextDefinition,
 )
-from app.scripts.helper import load_tdf
 from src.app.core.decorators import log_error
 
 logger = logging.getLogger(__name__)
@@ -26,22 +26,32 @@ csv.field_size_limit(sys.maxsize)
 
 
 @log_error
-def load_snomed_file(db: Session, table, file_path: str):
-    logger.info(f"Loading {table.__tablename__} from {file_path}, {datetime.now()}")
+def load_snomed_file_chunk(args):
+    db, table, file_path, chunk_size = args
     with open(file_path) as f:
         reader = csv.reader(f, delimiter="\t", quoting=csv.QUOTE_NONE)
         next(reader, None)
+        chunk = []
         for row in reader:
-            query = insert(table).values(tuple(row))
+            chunk.append(row)
+            if len(chunk) >= chunk_size:
+                query = insert(table).values(chunk)
+                db.execute(query)
+                chunk = []
+        if chunk:
+            query = insert(table).values(chunk)
             db.execute(query)
-        db.commit()
+    db.commit()
+
+
+def load_snomed_file(db: Session, table, file_path: str, chunk_size: int = 10000):
+    logger.info(f"Loading {table.__tablename__} from {file_path}, {datetime.now()}")
+    with multiprocessing.Pool() as pool:
+        pool.map(load_snomed_file_chunk, [(db, table, file_path, chunk_size)])
     logger.info(f"Finished loading {table.__tablename__}, {datetime.now()}")
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        filename="./logs/snomed_upload.log", encoding="utf-8", level=logging.DEBUG
-    )
     logging.info(f"Starting upload of Snomed CT, {datetime.now()}")
     session = SessionLocal()
     files_dir = get_dir_in_downloads(
