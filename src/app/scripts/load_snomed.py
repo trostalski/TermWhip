@@ -26,36 +26,22 @@ csv.field_size_limit(sys.maxsize)
 
 
 @log_error
-def load_snomed_file_chunk(args):
-    db, table, file_path, chunk_size = args
+def load_snomed_file(db: Session, table, file_path: str):
+    logger.info(f"Loading {table.__tablename__} from {file_path}, {datetime.now()}")
     with open(file_path) as f:
         reader = csv.reader(f, delimiter="\t", quoting=csv.QUOTE_NONE)
         next(reader, None)
-        chunk = []
         for row in reader:
-            chunk.append(row)
-            if len(chunk) >= chunk_size:
-                query = insert(table).values(chunk)
-                try:
-                    db.execute(query)
-                except Exception as e:
-                    logger.error(f"Error loading chunk: {e}")
-                    logger.error(f"Chunk: {chunk}")
-                chunk = []
-        if chunk:
-            query = insert(table).values(chunk)
+            query = insert(table).values(tuple(row))
             db.execute(query)
-    db.commit()
-
-
-def load_snomed_file(db: Session, table, file_path: str, chunk_size: int = 10000):
-    logger.info(f"Loading {table.__tablename__} from {file_path}, {datetime.now()}")
-    with multiprocessing.Pool() as pool:
-        pool.map(load_snomed_file_chunk, [(db, table, file_path, chunk_size)])
+        db.commit()
     logger.info(f"Finished loading {table.__tablename__}, {datetime.now()}")
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        filename="./logs/snomed_upload.log", encoding="utf-8", level=logging.DEBUG
+    )
     logging.info(f"Starting upload of Snomed CT, {datetime.now()}")
     session = SessionLocal()
     files_dir = get_dir_in_downloads(
