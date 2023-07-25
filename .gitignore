@@ -8,3 +8,6 @@ venv/
 
 # graph gpickle files
 *.gpickle
+
+# remove vscode
+.vscode/
