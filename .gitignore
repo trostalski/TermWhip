@@ -5,3 +5,12 @@
 # environment
 .env
 venv/
+
+# vscode
+.vscode/
+
+# cache
+.cache/
+
+# gpickle graph files
+*.gpickle
