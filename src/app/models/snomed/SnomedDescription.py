@@ -28,7 +28,7 @@ class SnomedDescription(Base):
     term = Column("term", String, nullable=False)
     caseSignificanceId = Column("case_significance_id", String, nullable=False)
     fts_ts_vector = Column(
-        "term_ts_vector",
+        "fts_ts_vector",
         TSVector(),
         nullable=False,
     )
