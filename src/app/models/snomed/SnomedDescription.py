@@ -35,7 +35,7 @@ class SnomedDescription(Base):
 
     __table__args__ = (
         Index(
-            "idx_term_tsvector",
+            "idx_fts_tsvector",
             fts_ts_vector,
             postgresql_using="gin",
         ),
