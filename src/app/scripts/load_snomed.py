@@ -32,6 +32,8 @@ def load_snomed_file(db: Session, table, file_path: str):
         reader = csv.reader(f, delimiter="\t", quoting=csv.QUOTE_NONE)
         next(reader, None)
         for row in reader:
+            if table.__tablename__ == "snomed_descriptions":
+                row.append(row[4] + " " + row[7])
             query = insert(table).values(tuple(row))
             db.execute(query)
         db.commit()
@@ -65,10 +67,10 @@ if __name__ == "__main__":
         #     load_snomed_file(session, SnomedRelationship, file.absolute())
         # elif "RelationshipConcreteValues" in file.name:
         #     load_snomed_file(session, SnomedRelationshipConcreteValue, file.absolute())
-        elif "sRefset_OWLExpression" in file.name:
-            load_snomed_file(session, SnomedOwlExpression, file.absolute())
-        elif "StatedRelationship" in file.name:
-            load_snomed_file(session, SnomedStatedRelationship, file.absolute())
+        # elif "sRefset_OWLExpression" in file.name:
+        #     load_snomed_file(session, SnomedOwlExpression, file.absolute())
+        # elif "StatedRelationship" in file.name:
+        #     load_snomed_file(session, SnomedStatedRelationship, file.absolute())
         elif "TextDefinition" in file.name:
             load_snomed_file(session, SnomedTextDefinition, file.absolute())
         else:
