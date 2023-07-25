@@ -32,9 +32,6 @@ def load_snomed_file(db: Session, table, file_path: str):
         reader = csv.reader(f, delimiter="\t", quoting=csv.QUOTE_NONE)
         next(reader, None)
         for row in reader:
-            if table.__tablename__ == "snomed_descriptions":
-                # add fts_ts_vector column -> id + " " + term
-                row.append(row[4] + " " + row[7])
             query = insert(table).values(tuple(row))
             db.execute(query)
         db.commit()

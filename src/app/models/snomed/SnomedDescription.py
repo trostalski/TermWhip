@@ -27,11 +27,7 @@ class SnomedDescription(Base):
     )
     term = Column("term", String, nullable=False)
     caseSignificanceId = Column("case_significance_id", String, nullable=False)
-    fts_ts_vector = Column(
-        "fts_ts_vector",
-        TSVector(),
-        nullable=False,
-    )
+    fts_ts_vector = Column("fts_ts_vector", TSVector())
 
     __table__args__ = (
         Index(
