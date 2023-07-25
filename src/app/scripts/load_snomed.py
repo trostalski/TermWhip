@@ -17,7 +17,7 @@ from app.models.snomed import (
     SnomedStatedRelationship,
     SnomedTextDefinition,
 )
-from src.app.core.decorators import log_error
+from app.core.decorators import log_error
 
 logger = logging.getLogger(__name__)
 
