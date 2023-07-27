@@ -22,15 +22,15 @@ def read_concept(id: int, db: Session = Depends(deps.get_db)):
 def read_fts(search_term: str, limit: str = 100, db: Session = Depends(deps.get_db)):
     query = text(
         """
-SELECT d.term, c.id, ts_rank_cd(fts_ts_vector, to_tsquery(:term)) AS rank
-FROM snomed_descriptions d
-JOIN snomed_concepts c ON c.id = d.concept_id
-WHERE to_tsquery(:term) @@ fts_ts_vector
-AND d.type_id = '900000000000003001'
-AND c.active = '1'
-AND d.active = '1'
-ORDER BY rank ASC
-LIMIT :limit;
+            SELECT d.term, c.id, ts_rank(fts_ts_vector, to_tsquery(:term)) AS rank
+            FROM snomed_descriptions d
+            JOIN snomed_concepts c ON c.id = d.concept_id
+            WHERE to_tsquery(:term) @@ fts_ts_vector
+            AND d.type_id = '900000000000003001'
+            AND c.active = '1'
+            AND d.active = '1'
+            ORDER BY rank DESC, CHAR_LENGTH(d.term) ASC
+            LIMIT :limit;
         """
     )
     terms = db.execute(

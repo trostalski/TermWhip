@@ -49,27 +49,30 @@ if __name__ == "__main__":
     )
 
     # First load the concept file, the other files reference it
-    # found_concept_file = False
-    # for file in files_dir.iterdir():
-    #     if "Concept" in file.name:
-    #         found_concept_file = True
-    #         load_snomed_file(session, SnomedConcept, file.absolute())
-    # if not found_concept_file:
-    #     raise FileNotFoundError("Could not find Snomed CT Concept file")
+    found_concept_file = False
+    for file in files_dir.iterdir():
+        if "Concept" in file.name:
+            found_concept_file = True
+            load_snomed_file(session, SnomedConcept, file.absolute())
+    if not found_concept_file:
+        raise FileNotFoundError("Could not find Snomed CT Concept file")
 
     # Now load the rest of the files
     for file in files_dir.iterdir():
         if "Description" in file.name:
             load_snomed_file(session, SnomedDescription, file.absolute())
-        # elif "Relationship_" in file.name:
-        #     load_snomed_file(session, SnomedRelationship, file.absolute())
-        # elif "RelationshipConcreteValues" in file.name:
-        #     load_snomed_file(session, SnomedRelationshipConcreteValue, file.absolute())
-        # elif "sRefset_OWLExpression" in file.name:
-        #     load_snomed_file(session, SnomedOwlExpression, file.absolute())
-        # elif "StatedRelationship" in file.name:
-        #     load_snomed_file(session, SnomedStatedRelationship, file.absolute())
+        elif "Relationship_" in file.name:
+            load_snomed_file(session, SnomedRelationship, file.absolute())
+        elif "RelationshipConcreteValues" in file.name:
+            load_snomed_file(session, SnomedRelationshipConcreteValue, file.absolute())
+        elif "sRefset_OWLExpression" in file.name:
+            load_snomed_file(session, SnomedOwlExpression, file.absolute())
+        elif "StatedRelationship" in file.name:
+            load_snomed_file(session, SnomedStatedRelationship, file.absolute())
         elif "TextDefinition" in file.name:
             load_snomed_file(session, SnomedTextDefinition, file.absolute())
         else:
             print(f"Unknown file: {file.name}")
+
+    # enter data into fts_ts_vector column
+    session.execute("")
