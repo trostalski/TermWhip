@@ -10,9 +10,9 @@ from app.logic.snomed import read
 router = APIRouter()
 
 
-@router.get("/code/{id}", response_model=SnomedConceptOut)
-def read_concept(id: int, db: Session = Depends(deps.get_db)):
-    db_concept = read.get_concept(db, id=id)
+@router.get("/code/{code}", response_model=SnomedConceptOut)
+def read_concept(code: int, db: Session = Depends(deps.get_db)):
+    db_concept = read.get_concept(db, id=code)
     if db_concept is None:
         raise HTTPException(status_code=404, detail="Concept not found")
     return db_concept
