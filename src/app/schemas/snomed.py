@@ -17,10 +17,10 @@ class ECLQuery(BaseModel):
     ecl_expression: str
 
 
-class CodedTerm(BaseModel):
+class SmomedCodedTerm(BaseModel):
     term: str
     code: int
 
 
-class FtsOut(BaseModel):
-    coded_terms: List[CodedTerm]
+class SnomedFtsOut(BaseModel):
+    coded_terms: List[SmomedCodedTerm]

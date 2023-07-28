@@ -14,3 +14,8 @@ UPDATE
 SET
     fts_ts_vector = to_tsvector(short_description || ' ' || code);
 
+UPDATE
+    loinc_codes
+SET
+    fts_ts_vector = to_tsvector(component || ' ' || code);
+

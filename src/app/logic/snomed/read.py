@@ -5,14 +5,14 @@ from app.schemas.snomed import SnomedConceptOut
 from .constants import FULLY_SPECIFIED_NAME, IS_A, SYNONYM
 
 
-def get_concept(db: Session, id: int):
+def get_code(db: Session, code: int):
     terms = (
         db.query(
             SnomedConcept.active,
             SnomedDescription.term,
             SnomedDescription.typeId,
         )
-        .filter(SnomedConcept.id == id)
+        .filter(SnomedConcept.id == code)
         .filter(SnomedConcept.id == SnomedDescription.conceptId)
         .all()
     )
@@ -21,7 +21,7 @@ def get_concept(db: Session, id: int):
         db.query(
             SnomedRelationship.destinationId,
         )
-        .filter(SnomedConcept.id == id)
+        .filter(SnomedConcept.id == code)
         .filter(SnomedConcept.id == SnomedRelationship.sourceId)
         .filter(SnomedRelationship.typeId == IS_A)
         .all()
@@ -40,7 +40,7 @@ def get_concept(db: Session, id: int):
             synonyms.append(term.term)
 
     return SnomedConceptOut(
-        id=id,
+        id=code,
         active=active,
         fsn=fsn,
         synonyms=synonyms,

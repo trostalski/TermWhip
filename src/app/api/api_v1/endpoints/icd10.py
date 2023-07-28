@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from nxontology import NXOntology
 
 from app.schemas.icd10 import ICD10CodeOut
-from app.schemas.snomed import CodedTerm, FtsOut
+from app.schemas.snomed import SmomedCodedTerm, SnomedFtsOut
 from app.api import deps
 from app.logic.icd10 import read
 from app.models.icd10.ICD10Code import ICD10Code
@@ -32,14 +32,14 @@ def read_code(
     return return_code
 
 
-@router.get("/fts", response_model=FtsOut)
+@router.get("/fts", response_model=SnomedFtsOut)
 def read_fts(search_term: str, limit: str = 100, db: Session = Depends(deps.get_db)):
     query = text(
         """
             SELECT description, code, ts_rank(fts_ts_vector, to_tsquery(:term)) AS rank
             FROM  icd10_codes
             WHERE to_tsquery(:term) @@ fts_ts_vector
-            ORDER BY rank DESC, CHAR_LENGTH(d.term) ASC
+            ORDER BY rank DESC, CHAR_LENGTH(description) ASC
             LIMIT :limit;
         """
     )
@@ -48,5 +48,5 @@ def read_fts(search_term: str, limit: str = 100, db: Session = Depends(deps.get_
         {"term": search_term, "limit": limit},
     )
 
-    coded_terms = [CodedTerm(term=t[0], code=t[1]) for t in terms]
-    return FtsOut(coded_terms=coded_terms)
+    coded_terms = [SmomedCodedTerm(term=t[0], code=t[1]) for t in terms]
+    return SnomedFtsOut(coded_terms=coded_terms)
