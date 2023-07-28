@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
-from sqlalchemy import func, text
+from sqlalchemy import text
 
 from app.schemas.snomed import SnomedConceptOut, FtsOut, CodedTerm
 from app.models.snomed import SnomedConcept, SnomedDescription
