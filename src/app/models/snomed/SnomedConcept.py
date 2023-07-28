@@ -1,5 +1,4 @@
 from sqlalchemy import BigInteger, Column, String
-
 from app.db.base import Base
 
 

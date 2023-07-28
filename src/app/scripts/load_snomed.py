@@ -1,3 +1,4 @@
+import multiprocessing
 import sys
 import csv
 import logging
@@ -16,8 +17,7 @@ from app.models.snomed import (
     SnomedStatedRelationship,
     SnomedTextDefinition,
 )
-from app.scripts.helper import load_tdf
-from src.app.core.decorators import log_error
+from app.core.decorators import log_error
 
 logger = logging.getLogger(__name__)
 
@@ -73,3 +73,6 @@ if __name__ == "__main__":
             load_snomed_file(session, SnomedTextDefinition, file.absolute())
         else:
             print(f"Unknown file: {file.name}")
+
+    # enter data into fts_ts_vector column
+    session.execute("")
