@@ -5,3 +5,9 @@
 # environment
 .env
 venv/
+
+# graph gpickle files
+*.gpickle
+
+# remove vscode
+.vscode/
