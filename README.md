@@ -14,8 +14,6 @@ So far:
 ### Features
 
 - Simple terminology look-up by code
-- Retrieving Code Information content
-- Retrieving Code(-set) Concept Similarity
 - Inspecting parent child relationships
 
 ### Usage
