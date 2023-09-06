@@ -9,7 +9,7 @@ TermWhip is an extensible medical terminology service.
 So far:
 - ICD-9
 - ICD-10
-- Snomed CT
+- Snomed-CT
 
 ### Features
 
